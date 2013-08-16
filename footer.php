@@ -1,27 +1,18 @@
-<?php
-/**
- * The template for displaying the footer.
- *
- * Contains footer content and the closing of the
- * #main and #page div elements.
- *
- * @package WordPress
- * @subpackage Twenty_Thirteen
- * @since Twenty Thirteen 1.0
- */
-?>
+		
+		<?php themezee_footer_before(); // hook before #footer ?>
+		<footer id="footer" class="clearfix" role="contentinfo">
+			<?php 
+				$options = get_option('themezee_options');
+				if ( isset($options['themeZee_general_footer']) and $options['themeZee_general_footer'] <> "" )
+					echo wp_kses_post($options['themeZee_general_footer']);
+			?>
+			<div id="credit-link"><?php themezee_credit_link(); ?></div>
+		</footer>
+		<?php themezee_footer_after(); // hook after #footer ?>
+	
+</div><!-- end #wrapper -->
+<?php themezee_wrapper_after(); // hook after #wrapper ?>
 
-		</div><!-- #main -->
-		<footer id="colophon" class="site-footer" role="contentinfo">
-			<?php get_sidebar( 'main' ); ?>
-
-			<div class="site-info">
-				<?php do_action( 'twentythirteen_credits' ); ?>
-				<a href="<?php echo esc_url( __( 'http://wordpress.org/', 'twentythirteen' ) ); ?>" title="<?php esc_attr_e( 'Semantic Personal Publishing Platform', 'twentythirteen' ); ?>"><?php printf( __( 'Proudly powered by %s', 'twentythirteen' ), 'WordPress' ); ?></a>
-			</div><!-- .site-info -->
-		</footer><!-- #colophon -->
-	</div><!-- #page -->
-
-	<?php wp_footer(); ?>
+<?php wp_footer(); ?>
 </body>
 </html>

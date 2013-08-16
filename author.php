@@ -1,60 +1,47 @@
-<?php
-/**
- * The template for displaying Author archive pages.
- *
- * Learn more: http://codex.wordpress.org/Template_Hierarchy
- *
- * @package WordPress
- * @subpackage Twenty_Thirteen
- * @since Twenty Thirteen 1.0
- */
+<?php get_header(); ?>
 
-get_header(); ?>
+<?php // Retrieve Current Author
+	$author = (get_query_var('author_name')) ? get_user_by('slug', get_query_var('author_name')) : get_userdata(get_query_var('author'));
+?>
+	
+	<div id="wrap">
+		
+		<section id="content" class="primary" role="main">
+		
+			<h2 class="archive-title"><?php _e('Archive for Author', 'zeeTasty_lang'); ?> <?php echo esc_attr($author->display_name); ?></h2>
+			
+	<?php // Show Author Box
+		if(isset($author) and $author->description != '') : ?>
+			<div class="author-box clearfix">
+				<div class="author-image"><?php echo get_avatar( $author->user_email, '70'); ?></a></div>
+				<div class="author-info">       
+					<h5><?php _e('About the Author:', 'zeeTasty_lang'); ?> <?php echo esc_attr($author->display_name); ?></h5>
+					<div class="author-description"><?php echo esc_attr($author->description); ?></div>
+						
+					<?php if($author->user_url != '') : ?>
+						<div class="author-website">
+							<?php _e('Author Website: ', 'zeeTasty_lang'); ?>
+							<a href="<?php echo esc_url($author->user_url); ?>" title="<?php _e('Author Website: ', 'zeeTasty_lang'); ?>">
+							<?php echo esc_url($author->user_url); ?></a>
+						</div>
+					<?php endif; ?>
+				</div>
+			</div>
+	<?php endif; ?>
 
-	<div id="primary" class="content-area">
-		<div id="content" class="site-content" role="main">
-
-		<?php if ( have_posts() ) : ?>
-
-			<?php
-				/* Queue the first post, that way we know
-				 * what author we're dealing with (if that is the case).
-				 *
-				 * We reset this later so we can run the loop
-				 * properly with a call to rewind_posts().
-				 */
-				the_post();
-			?>
-
-			<header class="archive-header">
-				<h1 class="archive-title"><?php printf( __( 'All posts by %s', 'twentythirteen' ), '<span class="vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '" title="' . esc_attr( get_the_author() ) . '" rel="me">' . get_the_author() . '</a></span>' ); ?></h1>
-			</header><!-- .archive-header -->
-
-			<?php
-				/* Since we called the_post() above, we need to
-				 * rewind the loop back to the beginning that way
-				 * we can run the loop properly, in full.
-				 */
-				rewind_posts();
-			?>
-
-			<?php if ( get_the_author_meta( 'description' ) ) : ?>
-				<?php get_template_part( 'author-bio' ); ?>
-			<?php endif; ?>
-
-			<?php /* The loop */ ?>
-			<?php while ( have_posts() ) : the_post(); ?>
-				<?php get_template_part( 'content', get_post_format() ); ?>
-			<?php endwhile; ?>
-
-			<?php twentythirteen_paging_nav(); ?>
-
-		<?php else : ?>
-			<?php get_template_part( 'content', 'none' ); ?>
-		<?php endif; ?>
-
-		</div><!-- #content -->
-	</div><!-- #primary -->
-
-<?php get_sidebar(); ?>
-<?php get_footer(); ?>
+		<?php if (have_posts()) : while (have_posts()) : the_post();
+		
+			get_template_part( 'loop', 'index' );
+		
+			endwhile;
+			
+		themezee_display_pagination();
+			
+		endif; ?>
+			
+		</section>
+		
+		<?php get_sidebar(); ?>
+	</div>
+	
+<?php get_footer(); ?>	

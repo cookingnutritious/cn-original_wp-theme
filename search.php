@@ -1,36 +1,37 @@
-<?php
-/**
- * The template for displaying Search Results pages.
- *
- * @package WordPress
- * @subpackage Twenty_Thirteen
- * @since Twenty Thirteen 1.0
- */
+<?php get_header(); ?>
 
-get_header(); ?>
+	<div id="wrap">
+		
+		<section id="content" class="primary" role="main">
+		
+		<?php if (have_posts()) : ?>
+			<h2 class="arh"><?php printf( __( 'Search Results for: %s', 'zeeTasty_lang' ), get_search_query() ); ?></h2>
+		
+		<?php while (have_posts()) : the_post();
+		
+			get_template_part( 'loop', 'index' );
+		
+			endwhile;
+			
+			themezee_display_pagination();
 
-	<div id="primary" class="content-area">
-		<div id="content" class="site-content" role="main">
+		else : ?>
 
-		<?php if ( have_posts() ) : ?>
+			<h2 class="arh"><?php printf( __( 'Search Results for: %s', 'zeeTasty_lang' ), get_search_query() ); ?></h2>
+			
+			<div class="post">
+				
+				<div class="entry">
+					<p><?php _e('No matches. Please try again, or use the navigation menus to find what you search for.', 'zeeTasty_lang'); ?></p>
+				</div>
+				
+			</div>
 
-			<header class="page-header">
-				<h1 class="page-title"><?php printf( __( 'Search Results for: %s', 'twentythirteen' ), get_search_query() ); ?></h1>
-			</header>
-
-			<?php /* The loop */ ?>
-			<?php while ( have_posts() ) : the_post(); ?>
-				<?php get_template_part( 'content', get_post_format() ); ?>
-			<?php endwhile; ?>
-
-			<?php twentythirteen_paging_nav(); ?>
-
-		<?php else : ?>
-			<?php get_template_part( 'content', 'none' ); ?>
-		<?php endif; ?>
-
-		</div><!-- #content -->
-	</div><!-- #primary -->
-
-<?php get_sidebar(); ?>
-<?php get_footer(); ?>
+			<?php endif; ?>
+			
+		</section>
+		
+		<?php get_sidebar(); ?>
+	</div>
+	
+<?php get_footer(); ?>	

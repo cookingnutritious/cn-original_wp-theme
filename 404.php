@@ -1,31 +1,41 @@
-<?php
-/**
- * The template for displaying 404 pages (Not Found).
- *
- * @package WordPress
- * @subpackage Twenty_Thirteen
- * @since Twenty Thirteen 1.0
- */
+<?php get_header(); ?>
 
-get_header(); ?>
+	<div id="wrap">
+		
+		<section id="content" class="primary" role="main">
 
-	<div id="primary" class="content-area">
-		<div id="content" class="site-content" role="main">
-
-			<header class="page-header">
-				<h1 class="page-title"><?php _e( 'Not found', 'twentythirteen' ); ?></h1>
-			</header>
-
-			<div class="page-wrapper">
-				<div class="page-content">
-					<h2><?php _e( 'This is somewhat embarrassing, isn&rsquo;t it?', 'twentythirteen' ); ?></h2>
-					<p><?php _e( 'It looks like nothing was found at this location. Maybe try a search?', 'twentythirteen' ); ?></p>
-
+			<div class="type-page">
+			
+				<h2 class="page-title"><?php _e('404 Error: Not found', 'zeeTasty_lang'); ?></h2>
+				
+				<div class="entry">
+					<p><?php _e('The page you trying to reach does not exist, or has been moved. Please use the menus or the search box to find what you are looking for', 'zeeTasty_lang'); ?></p>
+					
+					<h2><?php _e('Search', 'zeeTasty_lang'); ?></h2>
 					<?php get_search_form(); ?>
-				</div><!-- .page-content -->
-			</div><!-- .page-wrapper -->
 
-		</div><!-- #content -->
-	</div><!-- #primary -->
+					<h2><?php _e('Recent Posts', 'zeeTasty_lang'); ?></h2>
+					<ul>
+						<?php
+							$recent_posts = wp_get_recent_posts(array('numberposts' => '8', 'post_status' => 'publish'));
+							foreach( $recent_posts as $recent ) {
+								echo '<li><a href="' . esc_url(get_permalink($recent['ID'])) . '" title="Look '.esc_attr($recent['post_title']).'" >' . $recent['post_title'] . '</a></li>';
+							}
+						?>
+					</ul>
+					
+					<h2><?php _e('Pages', 'zeeTasty_lang'); ?></h2>
+					<ul>
+						<?php wp_list_pages('title_li='); ?>
+					</ul>
+				</div>
+				
+			</div>
+
+		</section>
+		
+		<?php get_sidebar(); ?>
+		
+	</div>
 
 <?php get_footer(); ?>

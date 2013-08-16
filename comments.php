@@ -1,59 +1,53 @@
-<?php
-/**
- * The template for displaying Comments.
+<?php 
+/***
+ * Comments Template
  *
- * The area of the page that contains comments and the comment form.
+ * This template displays the current comments of a post and the comment form
  *
- * @package WordPress
- * @subpackage Twenty_Thirteen
- * @since Twenty Thirteen 1.0
  */
 
-/*
- * If the current post is protected by a password and the visitor has not yet
- * entered the password we will return early without loading the comments.
- */
-if ( post_password_required() )
-	return;
-?>
+if (!empty($_SERVER['SCRIPT_FILENAME']) && 'comments.php' == basename($_SERVER['SCRIPT_FILENAME']))
+	die ('Please do not load this page directly. Thanks!');
 
-<div id="comments" class="comments-area">
+if ( post_password_required()) : ?>
+	<p><?php _e('Enter password to view comments.', 'zeeTasty_lang'); ?></p>
+<?php return; endif; ?>
 
-	<?php if ( have_comments() ) : ?>
-		<h2 class="comments-title">
-			<?php
-				printf( _nx( 'One thought on &ldquo;%2$s&rdquo;', '%1$s thoughts on &ldquo;%2$s&rdquo;', get_comments_number(), 'comments title', 'twentythirteen' ),
-					number_format_i18n( get_comments_number() ), '<span>' . get_the_title() . '</span>' );
-			?>
-		</h2>
 
-		<ol class="comment-list">
-			<?php
-				wp_list_comments( array(
-					'style'       => 'ol',
-					'short_ping'  => true,
-					'avatar_size' => 74,
-				) );
-			?>
-		</ol><!-- .comment-list -->
+<div id="comments">
 
-		<?php
-			// Are there comments to navigate through?
-			if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) :
-		?>
-		<nav class="navigation comment-navigation" role="navigation">
-			<h1 class="screen-reader-text section-heading"><?php _e( 'Comment navigation', 'twentythirteen' ); ?></h1>
-			<div class="nav-previous"><?php previous_comments_link( __( '&larr; Older Comments', 'twentythirteen' ) ); ?></div>
-			<div class="nav-next"><?php next_comments_link( __( 'Newer Comments &rarr;', 'twentythirteen' ) ); ?></div>
-		</nav><!-- .comment-navigation -->
-		<?php endif; // Check for comment navigation ?>
+<?php if ( have_comments() ) : ?>
 
-		<?php if ( ! comments_open() && get_comments_number() ) : ?>
-		<p class="no-comments"><?php _e( 'Comments are closed.' , 'twentythirteen' ); ?></p>
-		<?php endif; ?>
+	<h3 class="comments-title"><?php comments_number( '', __('One comment','zeeTasty_lang'), __('% comments','zeeTasty_lang') );?></h3>
 
-	<?php endif; // have_comments() ?>
+	<?php if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : ?>
+	<div class="comment-pagination clearfix">
+		<div class="alignleft"><?php previous_comments_link(); ?></div>
+		<div class="alignright"><?php next_comments_link() ?></div>
+	</div>
+	<?php endif; ?>
+	
+	<ol class="commentlist">
+		<?php wp_list_comments( array('avatar_size' => 48)); ?>
+	</ol>
 
-	<?php comment_form(); ?>
+	<?php if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : ?>
+	<div class="comment-pagination clearfix">
+		<div class="alignleft"><?php previous_comments_link() ?></div>
+		<div class="alignright"><?php next_comments_link() ?></div>
+	</div>
+	<?php endif; ?>
 
-</div><!-- #comments -->
+ <?php else : ?>
+
+	<?php if ( ! comments_open() and !is_page() ) : ?>
+		<p class="nocomments"><?php _e('Comments are closed.', 'zeeTasty_lang'); ?></p>
+	<?php endif; ?>
+	
+<?php endif; ?>
+
+<?php if ( comments_open() ) : ?>
+	<?php comment_form(array('comment_notes_after' => '')); ?>
+<?php endif; ?>
+
+</div>

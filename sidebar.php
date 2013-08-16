@@ -1,20 +1,27 @@
-<?php
-/**
- * The sidebar containing the secondary widget area, displays on posts and pages.
- *
- * If no active widgets in this sidebar, it will be hidden completely.
- *
- * @package WordPress
- * @subpackage Twenty_Thirteen
- * @since Twenty Thirteen 1.0
- */
 
-if ( is_active_sidebar( 'sidebar-2' ) ) : ?>
-	<div id="tertiary" class="sidebar-container" role="complementary">
-		<div class="sidebar-inner">
-			<div class="widget-area">
-				<?php dynamic_sidebar( 'sidebar-2' ); ?>
-			</div><!-- .widget-area -->
-		</div><!-- .sidebar-inner -->
-	</div><!-- #tertiary -->
-<?php endif; ?>
+<section id="sidebar" class="secondary clearfix" role="complementary">
+	<?php themezee_widgets_before(); // hook before sidebar widgets ?>
+
+	<?php
+		// Check if page and active Sidebar Pages area
+		if(is_page() && is_active_sidebar('sidebar-pages')) : 
+		
+			dynamic_sidebar('sidebar-pages');
+			
+		// Check if Main Sidebar has widgets
+		elseif(is_active_sidebar('sidebar-main')) : 
+		
+			dynamic_sidebar('sidebar-main');
+		
+		// Show hint where to add widgets
+		else : ?>
+
+		<aside class="widget">
+			<h3 class="widgettitle"><?php _e('Widget Area', 'zeeTasty_lang'); ?></h3>
+			<p></p>
+		</aside>
+	
+		<?php endif; ?>
+
+	<?php themezee_widgets_after(); // hook after sidebar widgets ?>
+</section>

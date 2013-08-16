@@ -1,51 +1,64 @@
-<?php
-/**
- * The Header for our theme.
- *
- * Displays all of the <head> section and everything up till <div id="main">
- *
- * @package WordPress
- * @subpackage Twenty_Thirteen
- * @since Twenty Thirteen 1.0
- */
-?><!DOCTYPE html>
-<!--[if IE 7]>
-<html class="ie ie7" <?php language_attributes(); ?>>
-<![endif]-->
-<!--[if IE 8]>
-<html class="ie ie8" <?php language_attributes(); ?>>
-<![endif]-->
-<!--[if !(IE 7) | !(IE 8)  ]><!-->
+<!DOCTYPE html><!-- HTML 5 -->
 <html <?php language_attributes(); ?>>
-<!--<![endif]-->
+
 <head>
-	<meta charset="<?php bloginfo( 'charset' ); ?>">
-	<meta name="viewport" content="width=device-width">
-	<title><?php wp_title( '|', true, 'right' ); ?></title>
-	<link rel="profile" href="http://gmpg.org/xfn/11">
-	<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
-	<!--[if lt IE 9]>
-	<script src="<?php echo get_template_directory_uri(); ?>/js/html5.js"></script>
-	<![endif]-->
-	<?php wp_head(); ?>
+<meta charset="<?php bloginfo( 'charset' ); ?>" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><?php wp_title( '|', true, 'right' ); ?></title>
+<link rel="profile" href="http://gmpg.org/xfn/11" />
+<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
+
+<?php /* Embeds HTML5shiv to support HTML5 elements in older IE versions. */ ?>
+<!--[if lt IE 9]>
+<script src="<?php echo get_template_directory_uri(); ?>/includes/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+<?php wp_head(); ?>
 </head>
 
 <body <?php body_class(); ?>>
-	<div id="page" class="hfeed site">
-		<header id="masthead" class="site-header" role="banner">
-			<a class="home-link" href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
-				<h1 class="site-title"><?php bloginfo( 'name' ); ?></h1>
-				<h2 class="site-description"><?php bloginfo( 'description' ); ?></h2>
+
+<?php themezee_wrapper_before(); // hook before #wrapper ?>
+<div id="wrapper" class="hfeed">
+	
+	<?php themezee_header_before(); // hook before #header ?>
+	<header id="header" class="clearfix" role="banner">
+
+		<div id="logo">
+		
+			<a href="<?php echo esc_url(home_url('/')); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
+		<?php // Display Logo Image or Site Title
+			$options = get_option('themezee_options');
+			if ( isset($options['themeZee_general_logo']) and $options['themeZee_general_logo'] <> "" ) : ?>
+				<img class="logo-image" src="<?php echo esc_url($options['themeZee_general_logo']); ?>" alt="Logo" /></a>
+		<?php else: ?>
+				<h1 class="site-title"><?php bloginfo('name'); ?></h1>
+		<?php endif; ?>
 			</a>
+			
+		<?php if(isset($options['themeZee_general_tagline']) and $options['themeZee_general_tagline'] == 'true') : ?>
+			<h2 class="site-description""><?php echo bloginfo('description'); ?></h2>
+		<?php endif; ?>
+		
+		</div>
 
-			<div id="navbar" class="navbar">
-				<nav id="site-navigation" class="navigation main-navigation" role="navigation">
-					<h3 class="menu-toggle"><?php _e( 'Menu', 'twentythirteen' ); ?></h3>
-					<a class="screen-reader-text skip-link" href="#content" title="<?php esc_attr_e( 'Skip to content', 'twentythirteen' ); ?>"><?php _e( 'Skip to content', 'twentythirteen' ); ?></a>
-					<?php wp_nav_menu( array( 'theme_location' => 'primary', 'menu_class' => 'nav-menu' ) ); ?>
-					<?php get_search_form(); ?>
-				</nav><!-- #site-navigation -->
-			</div><!-- #navbar -->
-		</header><!-- #masthead -->
+	</header>
+	<?php themezee_header_after(); // hook after #header ?>
 
-		<div id="main" class="site-main">
+	<nav id="mainnav" class="clearfix" role="navigation">
+		<div id="mainnav-border"></div>
+			<?php 
+			// Get Navigation out of Theme Options
+				wp_nav_menu(array('theme_location' => 'main_navi', 'container' => false, 'menu_id' => 'mainnav-menu', 'echo' => true, 'fallback_cb' => 'themezee_default_menu', 'before' => '', 'after' => '', 'link_before' => '', 'link_after' => '', 'depth' => 0));
+			?>
+	</nav>
+	<div id="mainnav-bg-wrap"><div id="mainnav-bg"></div></div>
+	
+	<?php // Check if there is a custom header image and display it except on frontpage template
+	if( get_header_image() != '' and !is_page_template('template-frontpage.php') ) :
+		if( ! (is_front_page() and isset($options['themeZee_frontpage_activate']) and $options['themeZee_frontpage_activate'] == 'true' )) :
+	?>
+			<div id="custom-header" class="header-image">
+				<img src="<?php echo get_header_image(); ?>" />
+			</div>
+		<?php endif; ?>
+	<?php endif; ?>
